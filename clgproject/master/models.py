@@ -100,6 +100,23 @@ class Areamaster(models.Model):
     class Meta:
         ordering = ['areaname']
 
+class Area(models.Model):
+    countrycode=models.IntegerField(blank=False)
+    statecode=models.IntegerField(blank=False)
+    areacode = models.BigAutoField(primary_key=True)
+    areaname= models.CharField(max_length=50, blank=False)
+    status=models.BooleanField(default=True)
+    created_at= models.DateTimeField(auto_now_add=True)
+    updated_at= models.DateTimeField(blank=True, null=True)
+    id = models.IntegerField(blank=True, null=True)
+    class Meta:
+        ordering = ['areaname']
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.id == None:
+            self.id = self.areacode
+            super().save()
+
 
 class District(models.Model):
     id = models.IntegerField(blank=True)

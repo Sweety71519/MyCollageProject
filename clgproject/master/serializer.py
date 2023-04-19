@@ -40,7 +40,7 @@ class StateSerializer(serializers.ModelSerializer):
 
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Areamaster
+        model = Area
         fields ='__all__'
 
 class DistrictSerializer(serializers.ModelSerializer):

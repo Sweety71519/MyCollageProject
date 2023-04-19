@@ -14,8 +14,8 @@ from rest_framework.views import APIView
 from .renderers import CustomRenderer
 from rest_framework.decorators import action
 
-class AreaMasterViewSets(viewsets.ModelViewSet):
-    queryset = Areamaster.objects.all()
+class AreaViewSets(viewsets.ModelViewSet):
+    queryset = Area.objects.all()
     serializer_class = AreaSerializer
 
     def retrieve(self, request, *args, **kwargs):
