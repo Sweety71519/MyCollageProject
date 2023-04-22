@@ -1,6 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.db.models.expressions import RawSQL
 from rest_framework import status
+from django.db import connections
 import json
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
@@ -61,3 +62,61 @@ class AreaViewSets(viewsets.ModelViewSet):
 
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+
+class AreaGetData(viewsets.ModelViewSet):
+    queryset = Area.objects.all()
+    serializer_class = AreaSerializer
+    print("serializer_class----------------------",serializer_class)
+    def retrieve(self, request, pk=None):
+        connection = connections['default']
+        areacode = kwargs.get('pk')
+        print("areacode",areacode)
+        query="""
+                SELECT master_area.areaname,master_country.countryname,master_state.statename
+                FROM master_area 
+                INNER JOIN master_country
+                ON master_area.countrycode = master_country.id
+                INNER JOIN master_state
+                ON master_area.statecode = master_state.id
+            """
+        #data = Area.objects.raw(query)
+        #serializer = AreaSerializer(data, many=True)
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+        data = []
+        data = [[row[0], row[1], row[2]] for row in rows]
+        # for row in rows:
+        #     data.append([row[0], row[1], row[2]])
+        # serializer = AreaSerializer(data, many=True)
+        # serializer.is_valid()
+        #print("data",serializer)
+        return Response({'data': data})
+
+
+#use where condiion example
+# class AreaGetData(viewsets.ModelViewSet):
+#     queryset = Area.objects.all()
+#     serializer_class = AreaSerializer
+#     print("serializer_class----------------------",serializer_class)
+#     def retrieve(self, request, *args, **kwargs):
+#         connection = connections['default']
+#         areacode = kwargs.get('pk')
+#         print("areacode",areacode)
+#         query="""
+#                 SELECT master_area.areaname,master_country.countryname,master_state.statename
+#                 FROM master_area 
+#                 INNER JOIN master_country
+#                 ON master_area.countrycode = master_country.id
+#                 INNER JOIN master_state
+#                 ON master_area.statecode = master_state.id
+#                 WHERE master_area.id = %s
+#             """
+#         with connection.cursor() as cursor:
+#             cursor.execute(query,[areacode])
+#             data = cursor.fetchall()
+#         data_dict = list(data)
+#         #print("data",data)
+#         return Response({'data': data_dict})

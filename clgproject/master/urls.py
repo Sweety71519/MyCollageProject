@@ -8,6 +8,8 @@ from master import cityview
 from master import userview
 from master import loginview
 from master import productview
+from master import employeeview
+
 from rest_framework import routers
 
 from rest_framework import urls
@@ -31,12 +33,16 @@ router.register(r'district',districtview.DistrictViewSets)
 router.register(r'city',cityview.CityViewSets)
 router.register(r'product',productview.ProductViewSets)
 router.register(r'user',userview.UserinformationViewSets)
+router.register(r'employee',employeeview.EmployeeViewSets)
 
 router.register(r'zonedata',zoneview.ZoneDataByCountry,basename='Zone')
 router.register(r'statedata',stateview.StateDataByCountry,basename='State')
+router.register(r'districtdata',districtview.DistrictDataByState,basename='District')
 #router.register(r'login', loginview.LoginView.as_view())
 
 # router.register('login', userview.Login, basename='login')
+
+router.register(r'areagetdata',areaview.AreaGetData)
 #router.register(r'login',loginview.LoginView)
 
 #router.register(r'/data/',MySnippetFillterData)
