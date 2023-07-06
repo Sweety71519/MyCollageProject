@@ -23,23 +23,6 @@ from rest_framework.permissions import IsAuthenticated
 
 #Class based view 
 
-
-class SnippetViewSets(viewsets.ModelViewSet):
-    queryset=Snippet.objects.all()
-    serializer_class=SnippetSerializer
-
-    def list(self, request):
-        queryset = Snippet.objects.raw('select * from master_snippet')
-        serializer = SnippetSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-class CountryRenderer(CustomRenderer):
-    def render(self, data, accepted_media_type=None, renderer_context=None):
-        wrapped_data = {"result":[data]}
-        return super().render(wrapped_data, accepted_media_type, renderer_context)
-
-
 class CountryViewSets(viewsets.ModelViewSet):
     queryset = Country.objects.all()
     #authentication_classes = [TokenAuthentication]

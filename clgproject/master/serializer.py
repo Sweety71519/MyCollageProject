@@ -3,10 +3,6 @@ from .models import * #Product,Snippet,Country,Zone,State,Areamaster
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 
-# class TourplanhdSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         models=Product
-#         fields ='__all__'
 
 from rest_framework import serializers
 from master.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
@@ -38,10 +34,26 @@ class StateSerializer(serializers.ModelSerializer):
         model = State
         fields ='__all__' 
 
+# StateAreaSerializer,CountryAreaSerializer,AreaSerializer all class perform inner join to get multiple table record
+class StateAreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        fields = ('statename','statecode',)  # Specify the fields you want from ModelB
+
+class CountryAreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ('countryname','countrycode','isdcode',)  # Specify the fields you want from ModelC
+
+
 class AreaSerializer(serializers.ModelSerializer):
+    model_b = StateAreaSerializer(source='statecode')
+    model_c = CountryAreaSerializer(source='countrycode')
     class Meta:
         model = Area
-        fields ='__all__'
+        fields = ('areacode','areaname','status','created_at','updated_at','id','model_b','model_c') 
+
+
 
 class DistrictSerializer(serializers.ModelSerializer):
     class Meta:
@@ -99,6 +111,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields ='__all__'
+
+
+
 
 
 

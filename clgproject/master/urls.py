@@ -23,8 +23,6 @@ router=routers.DefaultRouter()
 # viewset = viewset_class()
 # routes = router.get_routes(viewset_class)
 
-
-router.register(r'master',SnippetViewSets)
 router.register(r'country',CountryViewSets)
 router.register(r'zone',zoneview.ZoneViewSets)
 router.register(r'state',stateview.StateViewSets)
@@ -38,9 +36,12 @@ router.register(r'employee',employeeview.EmployeeViewSets)
 router.register(r'zonedata',zoneview.ZoneDataByCountry,basename='Zone')
 router.register(r'statedata',stateview.StateDataByCountry,basename='State')
 router.register(r'districtdata',districtview.DistrictDataByState,basename='District')
+
 #router.register(r'login', loginview.LoginView.as_view())
 
 # router.register('login', userview.Login, basename='login')
+
+router.register(r'areas', areaview.AreaGetData, basename='area')
 
 router.register(r'areagetdata',areaview.AreaGetData)
 #router.register(r'login',loginview.LoginView)

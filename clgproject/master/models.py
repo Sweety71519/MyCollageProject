@@ -73,9 +73,9 @@ class Zone(models.Model):
 
 class State(models.Model):
     id = models.BigAutoField(primary_key=True)
+    countrycode=models.ForeignKey(Country, on_delete=models.CASCADE)
     statecode=models.IntegerField(blank=False,default=1)
     zonecode = models.IntegerField(blank=True)
-    countrycode=models.IntegerField(blank=True)
     statename = models.CharField(max_length=50, blank=True)
     status=models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -88,7 +88,7 @@ class State(models.Model):
 
 class Areamaster(models.Model):
     id = models.BigAutoField(primary_key=True)
-    statecode=models.IntegerField(blank=False,default=1)
+    statecode=models.IntegerField(blank=False)
     zonecode = models.IntegerField(blank=False,)
     countrycode=models.IntegerField(blank=False)
     areacode=models.IntegerField(blank=False,)
@@ -101,8 +101,10 @@ class Areamaster(models.Model):
         ordering = ['areaname']
 
 class Area(models.Model):
-    countrycode=models.IntegerField(blank=False)
-    statecode=models.IntegerField(blank=False)
+    countrycode = models.ForeignKey(Country, on_delete=models.CASCADE)
+    statecode = models.ForeignKey(State, on_delete=models.CASCADE)
+    #countrycode=models.IntegerField(blank=False)
+    # statecode=models.IntegerField(blank=False)
     areacode = models.BigAutoField(primary_key=True)
     areaname= models.CharField(max_length=50, blank=False)
     status=models.BooleanField(default=True)
@@ -329,7 +331,7 @@ class Employee(models.Model):
     reportingdesgination=models.IntegerField(blank=True)
     status =models.BooleanField(default=True)    
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField()
+    updated_at= models.DateTimeField(blank=True, null=True)
     
     class Meta:
         ordering = ['employeename']

@@ -64,39 +64,89 @@ class AreaViewSets(viewsets.ModelViewSet):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 
+from rest_framework import routers
+from rest_framework.decorators import action
 
 class AreaGetData(viewsets.ModelViewSet):
     queryset = Area.objects.all()
+    # queryset = Area.objects.raw('''
+    #         SELECT a.id,a.areacode,a.areaname, b.countryname,c.statename
+    #         FROM master_area a
+    #         INNER JOIN master_country b ON a.countrycode_id = b.id
+    #         INNER JOIN master_state c ON a.statecode = c.id''')
     serializer_class = AreaSerializer
-    print("serializer_class----------------------",serializer_class)
-    def retrieve(self, request, pk=None):
-        connection = connections['default']
-        areacode = kwargs.get('pk')
-        print("areacode",areacode)
-        query="""
-                SELECT master_area.areaname,master_country.countryname,master_state.statename
-                FROM master_area 
-                INNER JOIN master_country
-                ON master_area.countrycode = master_country.id
-                INNER JOIN master_state
-                ON master_area.statecode = master_state.id
-            """
-        #data = Area.objects.raw(query)
-        #serializer = AreaSerializer(data, many=True)
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            rows = cursor.fetchall()
-        data = []
-        data = [[row[0], row[1], row[2]] for row in rows]
-        # for row in rows:
-        #     data.append([row[0], row[1], row[2]])
-        # serializer = AreaSerializer(data, many=True)
-        # serializer.is_valid()
-        #print("data",serializer)
-        return Response({'data': data})
+
+    # @action(detail=True, methods=['get'])
+
+    # # def retrieve(self, request, pk=None):
+    # #     result = Area.objects.select_related('model_b').select_related('model_c').values('field1', 'field2', 'model_b__field3', 'model_c__field4')
+    # #     queryset = self.queryset.filter(statecode=pk)
+    # #     serializer = self.serializer_class(queryset, many=True)
+    # #     response_data={
+    # #         'data': serializer.data,
+    # #         'status_code':status.HTTP_200_OK
+    # #     }
+    # #     return Response(response_data,status=status.HTTP_200_OK)
+
+    # def get_data(self, request, pk=None):
+    #     connection = connections['default']
+    #     area_id = pk
+    #     query = """
+    #         SELECT master_area.areaname, master_country.countryname,master_state.statename
+    #         FROM master_area a
+    #         INNER JOIN master_country b ON a.countrycode = b.id
+    #         INNER JOIN master_state c ON a.statecode = c.id
+    #         WHERE master_area.id = %s
+    #     """
+    #     # query = """
+    #     #     SELECT master_area.areaname, master_country.countryname, master_state.statename,master_state.
+    #     #     FROM master_area
+    #     #     INNER JOIN master_country ON master_area.countrycode = master_country.id
+    #     #     INNER JOIN master_state ON master_country.id = master_state.countrycode
+    #     #     WHERE master_area.id = %s
+    #     # """
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(query, [area_id])
+    #         rows = cursor.fetchall()
+    #     data = [[row[0], row[1], row[2]] for row in rows]
+    #     return Response({'data': data})
 
 
-#use where condiion example
+
+
+
+# class AreaGetData(viewsets.ModelViewSet):
+#     queryset = Area.objects.all()
+#     serializer_class = AreaSerializer
+#     print("serializer_class----------------------",serializer_class)
+#     def retrieve(self, request, pk=None):
+#         connection = connections['default']
+#         areacode = kwargs.get('pk')
+#         print("areacode",areacode)
+#         query="""
+#                 SELECT master_area.areaname,master_country.countryname,master_state.statename
+#                 FROM master_area 
+#                 INNER JOIN master_country
+#                 ON master_area.countrycode = master_country.id
+#                 INNER JOIN master_state
+#                 ON master_area.statecode = master_state.id
+#             """
+#         #data = Area.objects.raw(query)
+#         #serializer = AreaSerializer(data, many=True)
+#         with connection.cursor() as cursor:
+#             cursor.execute(query)
+#             rows = cursor.fetchall()
+#         data = []
+#         data = [[row[0], row[1], row[2]] for row in rows]
+#         # for row in rows:
+#         #     data.append([row[0], row[1], row[2]])
+#         # serializer = AreaSerializer(data, many=True)
+#         # serializer.is_valid()
+#         #print("data",serializer)
+#         return Response({'data': data})
+
+
+# use where condiion example
 # class AreaGetData(viewsets.ModelViewSet):
 #     queryset = Area.objects.all()
 #     serializer_class = AreaSerializer
